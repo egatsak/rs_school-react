@@ -6,17 +6,9 @@ interface AppProps {
   children?: React.ReactNode;
 }
 
-interface AppState {
-  count: number;
-}
-
-export class App extends Component<AppProps, AppState> {
+export class App extends Component<AppProps> {
   constructor(props: AppProps) {
     super(props);
-
-    this.state = {
-      count: 0,
-    };
   }
 
   render() {

@@ -30,10 +30,15 @@ describe("APP", () => {
   test("click on about page link routes to about page", async () => {
     componentRender(<App />);
     const aboutLink = screen.getByTestId("about-link");
+    const mainLink = screen.getByTestId("main-link");
+
     await userEvent.click(aboutLink);
     const aboutPageHeader = screen.getByText("AboutPage");
 
     expect(aboutPageHeader).toBeInTheDocument();
+
+    expect(aboutLink).toHaveClass("active");
+    expect(mainLink).not.toHaveClass("active");
   });
 
   test("input text is set to localstorage on leaving main page", async () => {
