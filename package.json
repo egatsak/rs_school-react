@@ -9,7 +9,9 @@
     "preview": "vite preview",
     "lint": "node ./node_modules/eslint/bin/eslint.js \"**/*.{ts,tsx}\"",
     "lint:fix": "node ./node_modules/eslint/bin/eslint.js \"**/*.{ts,tsx}\" --fix",
-    "test": "jest"
+    "lint:typecheck": "tsc --project ./tsconfig.json --noEmit --skipLibCheck",
+    "test": "jest",
+    "prepare": "husky install"
   },
   "dependencies": {
     "react": "^18.2.0",
