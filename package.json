@@ -11,6 +11,7 @@
     "lint:fix": "node ./node_modules/eslint/bin/eslint.js \"**/*.{ts,tsx}\" --fix",
     "lint:typecheck": "tsc --project ./tsconfig.json --noEmit --skipLibCheck",
     "test": "jest",
+    "test:cov": "jest --coverage",
     "prepare": "husky install"
   },
   "dependencies": {

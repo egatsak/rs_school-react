@@ -4,12 +4,13 @@ interface NotFoundPageProps {
   children?: React.ReactNode;
 }
 
-interface NotFoundPageState {
-  count: 0;
-}
-
-export default class NotFoundPage extends Component<NotFoundPageProps, NotFoundPageState> {
+export default class NotFoundPage extends Component<NotFoundPageProps> {
   render() {
-    return <div>NotFoundPage</div>;
+    return (
+      <>
+        <h2 className="page-heading">NotFoundPage</h2>
+        <p>Page not found!</p>
+      </>
+    );
   }
 }
