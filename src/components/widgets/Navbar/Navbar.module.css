@@ -5,6 +5,10 @@
   padding: 10px 40px;
 }
 
+.nav-items {
+  margin-left: auto;
+}
+
 .item {
   font-size: 24px;
 }
