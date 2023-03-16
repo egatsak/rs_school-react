@@ -1,0 +1,9 @@
+.active,
+.active > span {
+  color: red;
+  font-size: 64px;
+}
+
+.applink {
+  color: green;
+}
