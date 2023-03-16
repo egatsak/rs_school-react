@@ -1,10 +1,6 @@
-import React, { Component } from "react";
+import { Component } from "react";
 
-interface NotFoundPageProps {
-  children?: React.ReactNode;
-}
-
-export default class NotFoundPage extends Component<NotFoundPageProps> {
+export default class NotFoundPage extends Component {
   render() {
     return (
       <>

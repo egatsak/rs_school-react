@@ -1,14 +1,10 @@
-import React, { Component } from "react";
+import { Component, ReactNode } from "react";
 
 interface AboutPageProps {
-  children?: React.ReactNode;
+  children?: ReactNode;
 }
 
-interface AboutPageState {
-  count: 0;
-}
-
-export default class AboutPage extends Component<AboutPageProps, AboutPageState> {
+export default class AboutPage extends Component<AboutPageProps> {
   render() {
     return (
       <>

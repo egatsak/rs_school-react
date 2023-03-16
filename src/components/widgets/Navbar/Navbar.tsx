@@ -1,13 +1,9 @@
-import React, { Component } from "react";
-import { RoutePath } from "../../router/config/routeConfig";
+import { Component } from "react";
 import AppLink from "../../shared/ui/AppLink/AppLink";
+import { RoutePath } from "../../router/";
 import styles from "./Navbar.module.css";
 
-interface NavbarProps {
-  children?: React.ReactNode;
-}
-
-export default class Navbar extends Component<NavbarProps> {
+export default class Navbar extends Component {
   render() {
     return (
       <nav className={styles.navbar}>

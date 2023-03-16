@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import Input from "../../shared/ui/Input/Input";
-import { LOCAL_STORAGE_INPUT_KEY } from "../../../constants";
 import CardList from "../../widgets/CardList/CardList";
+
+import { LOCAL_STORAGE_INPUT_KEY } from "../../../constants";
+
 import styles from "./MainPage.module.css";
+
 interface MainPageProps {
   children?: React.ReactNode;
 }
