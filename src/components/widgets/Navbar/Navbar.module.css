@@ -1,18 +1,22 @@
 .navbar {
   display: flex;
   width: 100%;
-  justify-content: flex-start;
   padding: 10px 40px;
 }
 
-.nav-items {
+.nav {
   margin-left: auto;
 }
 
-.item {
-  font-size: 24px;
+.nav-items {
+  display: flex;
+  list-style: none;
 }
 
 .item:not(:first-child) {
   margin-left: 24px;
+}
+
+.link {
+  font-size: 24px;
 }

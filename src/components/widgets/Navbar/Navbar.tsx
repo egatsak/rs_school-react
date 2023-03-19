@@ -1,12 +1,14 @@
 import { Component } from "react";
 import AppLink from "../../shared/ui/AppLink/AppLink";
+import { NavbarItemList } from "./NavbarItemList";
 import { withRouter, WithRouterProps } from "../../router/provider/withRouter";
-import { RoutePath } from "../../router/";
+
 import styles from "./Navbar.module.css";
 
 const AppRoutesUi: Record<string, string> = {
   "/": "MAIN PAGE",
   "/about": "ABOUT PAGE",
+  "/form": "FORM PAGE",
 };
 
 class Navbar extends Component<WithRouterProps> {
@@ -15,18 +17,20 @@ class Navbar extends Component<WithRouterProps> {
   }
   render() {
     return (
-      <nav className={styles.navbar}>
+      <header className={styles.navbar}>
         <div>{AppRoutesUi[this.props.location.pathname] ?? "NOT FOUND PAGE"}</div>
-        <div className={styles["nav-items"]}>
-          <AppLink to={RoutePath.main} className={styles.item} data-testid="main-link">
-            Main
-          </AppLink>
-
-          <AppLink to={RoutePath.about} className={styles.item} data-testid="about-link">
-            About
-          </AppLink>
-        </div>
-      </nav>
+        <nav className={styles.nav}>
+          <ul className={styles["nav-items"]}>
+            {NavbarItemList.map((item) => (
+              <li key={item.path} className={styles.item}>
+                <AppLink to={item.path} className={styles.link} data-testid="main-link">
+                  {item.text}
+                </AppLink>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </header>
     );
   }
 }

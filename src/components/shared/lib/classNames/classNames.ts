@@ -1,4 +1,4 @@
-type Mods = Record<string, boolean | string>;
+type Mods = Record<string, string | boolean>;
 
 export function classNames(cls: string, mods: Mods = {}, extra: string[] = []): string {
   return [
@@ -6,7 +6,7 @@ export function classNames(cls: string, mods: Mods = {}, extra: string[] = []): 
     ...extra.filter(Boolean),
     ...Object.entries(mods)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .filter(([className, value]) => Boolean(value))
+      .filter(([_, value]) => Boolean(value))
       .map(([className]) => className),
   ].join(" ");
 }

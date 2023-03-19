@@ -1,18 +1,47 @@
-import { Component, InputHTMLAttributes } from "react";
+import { Component, forwardRef, InputHTMLAttributes } from "react";
+import { capitalize } from "../../lib/capitalize/capitalize";
 import { classNames } from "../../lib/classNames/classNames";
 import styles from "./Input.module.css";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   value?: string;
+  label?: string;
+  id?: string;
+  "data-testid"?: string;
 }
-
-export default class Input extends Component<InputProps> {
+export class Input extends Component<InputProps> {
   constructor(props: InputProps) {
     super(props);
   }
 
   render() {
-    const { value, ...otherProps } = this.props;
-    return <input value={value} className={classNames(styles.input)} {...otherProps} />;
+    const { value, id, placeholder, label, ...otherProps } = this.props;
+    return (
+      <>
+        {label && <label htmlFor={id}></label>}
+        <input id={id} placeholder={placeholder} value={value} className={classNames(styles.input)} {...otherProps} />
+      </>
+    );
   }
 }
+
+export default forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+  const { value, id, placeholder, label, ...otherProps } = props;
+  return (
+    <>
+      {label && (
+        <label htmlFor={id} className={styles.label}>
+          {capitalize(label)}
+        </label>
+      )}
+      <input
+        id={id}
+        ref={ref}
+        placeholder={placeholder}
+        value={value}
+        className={classNames(styles.input)}
+        {...otherProps}
+      />
+    </>
+  );
+});
