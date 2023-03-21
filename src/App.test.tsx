@@ -62,4 +62,18 @@ describe("APP", () => {
 
     expect(screen.getByDisplayValue(userInput)).toBeInTheDocument();
   });
+
+  test("click on form page link routes to form page", async () => {
+    componentRender(<App />);
+    const formLink = screen.getByTestId("form-link");
+    const mainLink = screen.getByTestId("main-link");
+
+    await userEvent.click(formLink);
+    const formPageHeader = screen.getByText("FormPage");
+
+    expect(formPageHeader).toBeInTheDocument();
+
+    expect(formLink).toHaveClass("active");
+    expect(mainLink).not.toHaveClass("active");
+  });
 });

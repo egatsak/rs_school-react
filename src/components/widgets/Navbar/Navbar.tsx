@@ -4,7 +4,6 @@ import { NavbarItemList } from "./NavbarItemList";
 import { withRouter, WithRouterProps } from "../../router/provider/withRouter";
 
 import styles from "./Navbar.module.css";
-import { RoutePath } from "../../router";
 
 const AppRoutesUi: Record<string, string> = {
   "/": "MAIN PAGE",

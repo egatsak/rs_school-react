@@ -1,10 +1,6 @@
-import { Component, ReactNode } from "react";
+import { Component } from "react";
 
-interface AboutPageProps {
-  children?: ReactNode;
-}
-
-export default class AboutPage extends Component<AboutPageProps> {
+export default class AboutPage extends Component {
   render() {
     return (
       <>

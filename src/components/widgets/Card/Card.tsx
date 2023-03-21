@@ -15,8 +15,6 @@ interface CardProps {
 }
 
 export default class Card extends Component<CardProps> {
-  componentWillUnmount(): void {}
-
   render() {
     const { title, price, description, imageLink, image, isPaperVersion, isAdult, deliveryDate, author } = this.props;
     let imageUrl = "";
@@ -25,7 +23,9 @@ export default class Card extends Component<CardProps> {
     }
     return (
       <article className={styles.card}>
-        {imageLink && <img src={imageLink} alt={`Photo-${title}`} style={{ width: "300px" }} />}
+        {imageLink && (
+          <img src={imageLink} alt={`Photo-${title}`} style={{ width: "300px" }} data-testid="card-image" />
+        )}
         {image && (
           <img
             src={imageUrl}
@@ -36,17 +36,18 @@ export default class Card extends Component<CardProps> {
         )}
 
         <div className={styles.container}>
-          <h3>{title}</h3>
-          <h4>{author}</h4>
+          <h3 data-testid="card-heading">{title}</h3>
+          <h4 data-testid="card-subheading">{author}</h4>
           <h5 className={styles.trivia}>
             <span>{isPaperVersion ? `Paper` : `E-book`}</span>
             {isAdult && <span>18+</span>}
           </h5>
           <h4 className={styles.trivia}>{deliveryDate && <span>{`Delivery date: ${deliveryDate}`}</span>}</h4>
-          <span>{`${price} $`}</span>
-          <h4></h4>
+          <h4>
+            <span data-testid="card-price">{`${price} $`}</span>
+          </h4>
         </div>
-        <p>{description}</p>
+        <p data-testid="card-description">{description}</p>
       </article>
     );
   }

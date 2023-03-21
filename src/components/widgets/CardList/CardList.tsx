@@ -11,7 +11,7 @@ interface CardProps<T extends { id: string }> {
 export default class CardList extends Component<CardProps<any>> {
   render() {
     return (
-      <ul className={styles.cardlist}>
+      <ul className={styles.cardlist} data-testid="cardlist-wrapper">
         {this.props.data.map((item) => (
           <Card key={item.id} {...item} />
         ))}

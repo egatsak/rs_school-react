@@ -6,11 +6,11 @@ import Switcher from "../../shared/ui/Switcher/Switcher";
 
 import type { Card } from "../../pages/FormPage/FormPage";
 import { Countries } from "../../../constants";
-
-import styles from "./Form.module.css";
 import { capitalize } from "../../shared/lib/capitalize/capitalize";
 
-type InputRef = MutableRefObject<(HTMLInputElement & { current: { isInvalid: boolean } }) | null>;
+import styles from "./Form.module.css";
+
+type InputRef = MutableRefObject<HTMLInputElement | null>;
 
 interface FormProps {
   addCard: (card: Card) => void;
@@ -47,6 +47,7 @@ export default class Form extends Component<FormProps> {
     this.invalidInputsRef = createRef();
     this.handleSubmit = this.handleSubmit.bind(this);
     this.validate = this.validate.bind(this);
+    this.clearInputs = this.clearInputs.bind(this);
   }
 
   clearInputs() {
@@ -68,12 +69,10 @@ export default class Form extends Component<FormProps> {
 
     if (!this.image.current?.files || this.image.current?.files.length < 1) {
       invalidInputIds.push("file");
-      this.image.current!.dataset.invalid = "true";
     }
 
     if (!this.country.current?.value || this.country.current?.value === "default") {
       invalidInputIds.push("country");
-      this.country.current!.dataset.invalid = "true";
     }
 
     if (!this.price.current?.value || Number(this.price.current?.value) <= 0) {
@@ -83,99 +82,86 @@ export default class Form extends Component<FormProps> {
     inputRefs.forEach((ref) => {
       if (!ref.current?.value || ref.current?.value?.length < 1) {
         invalidInputIds.push(ref.current!.id);
-        ref.current!.dataset.invalid = "true";
       }
     });
 
     this.invalidInputsRef.current!.invalidInputIds = [...invalidInputIds];
-    console.log(invalidInputIds);
     return invalidInputIds.length === 0;
   }
 
   handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const isValid = this.validate();
-    console.log(this.invalidInputsRef.current?.invalidInputIds);
 
     if (!isValid) {
       this.forceUpdate();
       return;
     }
 
-    this.invalidInputsRef.current!.invalidInputIds = [];
-
     const formData = new FormData(e.currentTarget);
-    const output = {} as Record<keyof Card, File | string | number | boolean>;
+    const card = {} as Record<keyof Card, File | string | number | boolean>;
 
     for (const [key, value] of formData.entries()) {
       if (value !== undefined && key !== "bookType") {
-        output[key as keyof Card] = value;
+        card[key as keyof Card] = value;
       }
     }
 
-    if (this.isAdult.current) {
-      output.isAdult = this.isAdult.current.checked;
-    }
+    card.isAdult = this.isAdult.current!.checked;
 
-    if (this.isPaperVersion.current) {
-      output.isPaperVersion = this.isPaperVersion.current.checked;
-    }
+    card.isPaperVersion = this.isPaperVersion.current!.checked;
 
-    output.id = Math.random().toFixed(10);
-    output.author = capitalize(output.author as string);
-    output.price = Number(output.price);
-    console.log(output);
-    this.props.addCard(output as Card);
+    card.id = Math.random().toFixed(10);
+    card.author = capitalize(card.author as string);
+    card.price = Number(card.price);
+
+    this.props.addCard(card as Card);
+
+    this.invalidInputsRef.current!.invalidInputIds = [];
     this.clearInputs();
   }
 
-  componentDidUpdate() {
-    console.log(this.invalidInputsRef.current);
-  }
-
   render() {
-    console.log(this.invalidInputsRef.current);
-    console.log(today);
     return (
-      <form onSubmit={this.handleSubmit} ref={this.invalidInputsRef}>
+      <form onSubmit={this.handleSubmit} ref={this.invalidInputsRef} data-testid="form">
         <Input
           id="author"
           label="author"
-          data-testid="author"
-          ref={this.author}
           name="author"
+          ref={this.author}
+          data-testid="author"
           invalidMsg={this.invalidInputsRef.current?.invalidInputIds.includes("author") ? "Invalid value!" : null}
         />
         <Input
           id="title"
           label="title"
-          data-testid="title"
-          ref={this.title}
           name="title"
+          ref={this.title}
+          data-testid="title"
           invalidMsg={this.invalidInputsRef.current?.invalidInputIds.includes("title") ? "Invalid value!" : null}
         />
         <Input
           id="description"
           label="description"
-          data-testid="description"
           ref={this.description}
           name="description"
+          data-testid="description"
         />
         <Input
           id="price"
           type="number"
-          label="price"
-          data-testid="price"
-          ref={this.price}
           name="price"
+          label="price"
+          ref={this.price}
+          data-testid="price"
           invalidMsg={this.invalidInputsRef.current?.invalidInputIds.includes("price") ? "Invalid value!" : null}
         />
         <Input
           id="deliveryDate"
           type="date"
           label="Delivery Date"
-          data-testid="deliveryDate"
           ref={this.deliveryDate}
+          data-testid="deliveryDate"
           name="deliveryDate"
           min={today}
           invalidMsg={this.invalidInputsRef.current?.invalidInputIds.includes("deliveryDate") ? "Invalid value!" : null}
@@ -200,19 +186,33 @@ export default class Form extends Component<FormProps> {
         />
         <div className={styles.checkboxWrapper}>
           <input
-            type="radio"
             id="bookTypeChoice1"
+            type="radio"
             name="bookType"
             value="paper"
+            data-testid="radio-paper"
             defaultChecked
             ref={this.isPaperVersion}
           />
           <label htmlFor="bookTypeChoice1">Paper</label>
-          <input type="radio" id="bookTypeChoice2" name="bookType" value="e-book" ref={this.isEbook} />
+          <input
+            id="bookTypeChoice2"
+            type="radio"
+            name="bookType"
+            value="e-book"
+            data-testid="radio-ebook"
+            ref={this.isEbook}
+          />
           <label htmlFor="bookTypeChoice2">E-book</label>
         </div>
-        <Switcher name="isAdult" labelText="18+" ref={this.isAdult} className={styles.mbottom} />
-        <Button type="submit" className={styles.singleBtn}>
+        <Switcher
+          name="isAdult"
+          labelText="18+"
+          className={styles.mbottom}
+          data-testid="adult-switcher"
+          ref={this.isAdult}
+        />
+        <Button type="submit" className={styles.singleBtn} data-testid="submit">
           Submit
         </Button>
       </form>

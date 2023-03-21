@@ -27,6 +27,7 @@ export default forwardRef<HTMLInputElement, InputProps>((props, ref) => {
         placeholder={placeholder}
         value={value}
         className={classNames(styles.input, {}, [styles["checkbox"]])}
+        data-testid="input"
         {...otherProps}
       />
     </div>

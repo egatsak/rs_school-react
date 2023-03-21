@@ -8,16 +8,12 @@ import { BOOKS } from "../../../constants";
 
 import styles from "./MainPage.module.css";
 
-interface MainPageProps {
-  children?: React.ReactNode;
-}
-
 interface MainPageState {
   value: string;
 }
 
-export default class MainPage extends Component<MainPageProps, MainPageState> {
-  constructor(props: MainPageProps) {
+export default class MainPage extends Component<object, MainPageState> {
+  constructor(props: object) {
     super(props);
     this.state = { value: "" };
     this.handleChange = this.handleChange.bind(this);
