@@ -12,9 +12,9 @@ export interface WithRouterProps {
 export const withRouter = <Props extends WithRouterProps>(Component: React.ComponentType<Props>) => {
   return (props: Omit<Props, keyof WithRouterProps>) => {
     const location = useLocation();
-    const params = useParams();
-    const navigate = useNavigate();
+    /*     const params = useParams();
+    const navigate = useNavigate(); */
 
-    return <Component {...(props as Props)} location={location} params={params} navigate={navigate} />;
+    return <Component {...(props as Props)} location={location} /* params={params} navigate={navigate} */ />;
   };
 };

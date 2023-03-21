@@ -12,3 +12,12 @@
 img {
   border-radius: 5px 5px 0 0;
 }
+
+.trivia {
+  display: flex;
+  justify-content: center;
+}
+
+.trivia > :not(:first-child) {
+  margin-left: 8px;
+}

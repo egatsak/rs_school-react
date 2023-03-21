@@ -4,6 +4,8 @@ import CardList from "../../widgets/CardList/CardList";
 
 import { LOCAL_STORAGE_INPUT_KEY } from "../../../constants";
 
+import { BOOKS } from "../../../constants";
+
 import styles from "./MainPage.module.css";
 
 interface MainPageProps {
@@ -49,7 +51,7 @@ export default class MainPage extends Component<MainPageProps, MainPageState> {
       <div>
         <h2 className="page-heading">MainPage</h2>
         <Input value={this.state.value} onChange={this.handleChange} className={styles.input} data-testid="input" />
-        <CardList></CardList>
+        <CardList data={BOOKS}></CardList>
       </div>
     );
   }

@@ -8,9 +8,9 @@ export default class Button extends Component<ButtonHTMLAttributes<HTMLButtonEle
   }
 
   render() {
-    const { children, ...otherProps } = this.props;
+    const { children, className, ...otherProps } = this.props;
     return (
-      <button className={classNames(styles.button)} {...otherProps}>
+      <button className={classNames(styles.button, {}, [className])} {...otherProps}>
         {children}
       </button>
     );

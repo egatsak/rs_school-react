@@ -4,6 +4,7 @@ import { NavbarItemList } from "./NavbarItemList";
 import { withRouter, WithRouterProps } from "../../router/provider/withRouter";
 
 import styles from "./Navbar.module.css";
+import { RoutePath } from "../../router";
 
 const AppRoutesUi: Record<string, string> = {
   "/": "MAIN PAGE",
@@ -23,7 +24,7 @@ class Navbar extends Component<WithRouterProps> {
           <ul className={styles["nav-items"]}>
             {NavbarItemList.map((item) => (
               <li key={item.path} className={styles.item}>
-                <AppLink to={item.path} className={styles.link} data-testid="main-link">
+                <AppLink to={item.path} className={styles.applink} data-testid={item.dataTestId}>
                   {item.text}
                 </AppLink>
               </li>
