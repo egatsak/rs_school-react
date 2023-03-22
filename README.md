@@ -1,12 +1,12 @@
-# Week 1
+# Week 2
 
-## React. Components
+## React. Forms
 
 ### How-to
 
 - `git clone #repository-url#`
 - `cd rs_school-react`
-- `git checkout react_components`
+- `git checkout react_forms`
 - `npm i`
 
 ### How-to pt.2
