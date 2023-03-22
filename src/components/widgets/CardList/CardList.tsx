@@ -1,14 +1,17 @@
 import { Component } from "react";
-import Card from "../Card/Card";
+import Card, { CardProps } from "../Card/Card";
 
 import styles from "./CardList.module.css";
 
-interface CardProps<T extends { id: string }> {
+interface WithId {
+  id: string;
+}
+
+interface CardPropsWithId<T extends WithId> {
   data: T[];
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export default class CardList extends Component<CardProps<any>> {
+export default class CardList extends Component<CardPropsWithId<CardProps & WithId>> {
   render() {
     return (
       <ul className={styles.cardlist} data-testid="cardlist-wrapper">

@@ -1,4 +1,4 @@
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import Form from "./Form";
 
@@ -68,28 +68,33 @@ describe("FORM", () => {
     fireEvent.change(deliveryDateInput, { target: { value: "2030-11-01" } });
     fireEvent.change(countrySelect, { target: { value: "US" } });
 
-    await act(async () => {
-      await waitFor(() => {
-        userEvent.upload(fileInput, mockFile);
-      });
+    fireEvent.change(fileInput, {
+      target: { files: { item: () => mockFile, length: 1, 0: mockFile } },
     });
 
-    // userEvent.upload(fileInput, mockFile);
-    /*     userEvent.click(switcher);
-    userEvent.click(radioEbook); */
-    fireEvent.click(submitBtn);
+    userEvent.click(switcher);
+    userEvent.click(radioEbook);
 
     expect(hasInputValue(authorInput, "Harry Potter")).toBeTruthy();
     expect(hasInputValue(titleInput, "J. Rowling")).toBeTruthy();
-
     expect(hasInputValue(descriptionInput, "Lorem ipsum")).toBeTruthy();
-
     expect(hasInputValue(priceInput, "10")).toBeTruthy();
-
     expect(hasInputValue(deliveryDateInput, "2030-11-01")).toBeTruthy();
-
     expect(hasInputValue(countrySelect, "United States")).toBeTruthy();
-    console.log(fileInput.files![0]);
-    //expect(onSubmit).toHaveBeenCalled();
+
+    fireEvent.click(submitBtn);
+
+    expect(authorInput).toHaveValue("");
+    expect(titleInput).toHaveValue("");
+    expect(descriptionInput).toHaveValue("");
+    expect(priceInput).toHaveValue(null);
+    expect(deliveryDateInput).toHaveValue("");
+    expect(authorInput).toHaveValue("");
+    expect(countrySelect).toHaveValue("default");
+    expect(switcher).not.toBeChecked();
+    expect(radioPaper).toBeChecked();
+    expect(radioEbook).not.toBeChecked();
+
+    expect(onSubmit).toHaveBeenCalled();
   });
 });
