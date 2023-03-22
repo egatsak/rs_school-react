@@ -1,0 +1,22 @@
+.navbar {
+  display: flex;
+  width: 100%;
+  padding: 10px 40px;
+}
+
+.nav {
+  margin-left: auto;
+}
+
+.nav-items {
+  display: flex;
+  list-style: none;
+}
+
+.item:not(:first-child) {
+  margin-left: 24px;
+}
+
+.applink {
+  font-size: 24px;
+}

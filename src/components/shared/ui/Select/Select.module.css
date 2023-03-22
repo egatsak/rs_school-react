@@ -1,0 +1,20 @@
+.selectWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.label {
+  font-size: 24px;
+}
+.label :not(:first-child) {
+  margin-left: 12px;
+  color: red;
+}
+
+.select {
+  border-radius: 8px;
+  padding: 4px;
+  font-size: 24px;
+}
