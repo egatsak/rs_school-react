@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Input from "../../shared/ui/Input/Input";
 import CardList from "../../widgets/CardList/CardList";
 
@@ -8,47 +8,31 @@ import { BOOKS } from "../../../constants";
 
 import styles from "./MainPage.module.css";
 
-interface MainPageState {
-  value: string;
-}
+function MainPage() {
+  const [inputValue, setInputValue] = useState("");
 
-export default class MainPage extends Component<object, MainPageState> {
-  constructor(props: object) {
-    super(props);
-    this.state = { value: "" };
-    this.handleChange = this.handleChange.bind(this);
-  }
-
-  saveStateToLocalStorage() {
-    window.localStorage.setItem(LOCAL_STORAGE_INPUT_KEY, this.state.value);
-  }
-
-  componentDidMount() {
-    const data = window.localStorage.getItem(LOCAL_STORAGE_INPUT_KEY);
-    if (data) {
-      this.setState({ value: data });
+  useEffect(() => {
+    const storageValue = localStorage.getItem(LOCAL_STORAGE_INPUT_KEY);
+    if (storageValue !== null) {
+      setInputValue(storageValue);
     }
+  }, []);
 
-    window.addEventListener("beforeunload", this.saveStateToLocalStorage.bind(this));
-  }
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputValue(e.target.value);
+      localStorage.setItem(LOCAL_STORAGE_INPUT_KEY, e.target.value);
+    },
+    [setInputValue]
+  );
 
-  componentWillUnmount(): void {
-    window.removeEventListener("beforeunload", this.saveStateToLocalStorage.bind(this));
-
-    this.saveStateToLocalStorage();
-  }
-
-  handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    this.setState({ value: e.target.value });
-  }
-
-  render() {
-    return (
-      <div>
-        <h2 className="page-heading">MainPage</h2>
-        <Input value={this.state.value} onChange={this.handleChange} className={styles.input} data-testid="input" />
-        <CardList data={BOOKS}></CardList>
-      </div>
-    );
-  }
+  return (
+    <div>
+      <h2 className="page-heading">MainPage</h2>
+      <Input value={inputValue} onChange={handleChange} className={styles.input} data-testid="input" />
+      <CardList data={BOOKS}></CardList>
+    </div>
+  );
 }
+
+export default MainPage;

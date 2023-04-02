@@ -6,6 +6,10 @@ import { App } from "./App";
 import { LOCAL_STORAGE_INPUT_KEY } from "./constants";
 
 describe("APP", () => {
+  beforeEach(() => {
+    window.localStorage.clear();
+  });
+
   test("renders main page correctly", () => {
     componentRender(<App />, { route: "/" });
     const mainPageHeader = screen.getByText("MainPage");
@@ -50,7 +54,7 @@ describe("APP", () => {
     const userInput = "12345";
     await userEvent.type(input, userInput);
 
-    expect(localStorage.getItem(LOCAL_STORAGE_INPUT_KEY)).toEqual("");
+    expect(localStorage.getItem(LOCAL_STORAGE_INPUT_KEY)).toEqual("12345");
 
     await userEvent.click(aboutLink);
     const aboutPageHeader = screen.getByText("AboutPage");

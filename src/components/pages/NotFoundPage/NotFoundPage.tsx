@@ -1,12 +1,12 @@
-import { Component } from "react";
+import { FC } from "react";
 
-export default class NotFoundPage extends Component {
-  render() {
-    return (
-      <>
-        <h2 className="page-heading">NotFoundPage</h2>
-        <p>Page not found!</p>
-      </>
-    );
-  }
-}
+const NotFoundPage: FC = () => {
+  return (
+    <>
+      <h2 className="page-heading">NotFoundPage</h2>
+      <p>Page not found!</p>
+    </>
+  );
+};
+
+export default NotFoundPage;

@@ -6,7 +6,7 @@
 
 - `git clone #repository-url#`
 - `cd rs_school-react`
-- `git checkout react_forms`
+- `git checkout react_hooks`
 - `npm i`
 
 ### How-to pt.2

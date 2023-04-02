@@ -1,18 +1,15 @@
-import { Component, ButtonHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, FC } from "react";
 import { classNames } from "../../lib/classNames/classNames";
+
 import styles from "./Button.module.css";
 
-export default class Button extends Component<ButtonHTMLAttributes<HTMLButtonElement>> {
-  constructor(props: ButtonHTMLAttributes<HTMLButtonElement>) {
-    super(props);
-  }
+const Button: FC<ButtonHTMLAttributes<HTMLButtonElement>> = (props) => {
+  const { children, className, ...otherProps } = props;
+  return (
+    <button className={classNames(styles.button, {}, [className])} {...otherProps}>
+      {children}
+    </button>
+  );
+};
 
-  render() {
-    const { children, className, ...otherProps } = this.props;
-    return (
-      <button className={classNames(styles.button, {}, [className])} {...otherProps}>
-        {children}
-      </button>
-    );
-  }
-}
+export default Button;
