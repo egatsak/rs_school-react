@@ -1,4 +1,5 @@
 import { FC } from "react";
+import { Countries } from "../../../constants";
 
 import styles from "./Card.module.css";
 
@@ -9,13 +10,14 @@ export interface CardProps {
   isAdult: boolean;
   isPaperVersion: boolean;
   author: string;
+  country: string;
   deliveryDate?: string;
   imageLink?: string;
   image?: File;
 }
 
 const Card: FC<CardProps> = (props) => {
-  const { title, price, description, imageLink, image, isPaperVersion, isAdult, deliveryDate, author } = props;
+  const { title, price, description, imageLink, image, isPaperVersion, isAdult, deliveryDate, author, country } = props;
   let imageUrl = "";
   if (image) {
     imageUrl = URL.createObjectURL(image);
@@ -38,6 +40,7 @@ const Card: FC<CardProps> = (props) => {
         <h5 className={styles.trivia}>
           <span>{isPaperVersion ? `Paper` : `E-book`}</span>
           {isAdult && <span>18+</span>}
+          {country && <span data-testid="card-country">{Countries[country as keyof typeof Countries]}</span>}
         </h5>
         <h4 className={styles.trivia}>{deliveryDate && <span>{`Delivery date: ${deliveryDate}`}</span>}</h4>
         <h4>

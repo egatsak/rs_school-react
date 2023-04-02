@@ -1,4 +1,4 @@
-import React, { Component, createRef, MutableRefObject } from "react";
+import React, { FC, MutableRefObject, useReducer, useRef } from "react";
 import Button from "../../shared/ui/Button/Button";
 import Input from "../../shared/ui/Input/Input";
 import Select from "../../shared/ui/Select/Select";
@@ -18,64 +18,48 @@ interface FormProps {
 
 const today = new Date().toISOString().split("T")[0];
 
-export default class Form extends Component<FormProps> {
-  private author: InputRef;
-  private title: InputRef;
-  private description: InputRef;
-  private price: InputRef;
-  private country: MutableRefObject<HTMLSelectElement | null>;
-  private isAdult: InputRef;
-  private isPaperVersion: InputRef;
-  private isEbook: InputRef;
-  private deliveryDate: InputRef;
-  private image: InputRef;
-  private invalidInputsRef: MutableRefObject<HTMLFormElement | null>;
+const Form: FC<FormProps> = (props) => {
+  const forceUpdate = useReducer((x: number) => x + 1, 0)[1];
+  const { addCard } = props;
 
-  constructor(props: FormProps) {
-    super(props);
+  const author: InputRef = useRef(null);
+  const title: InputRef = useRef(null);
+  const description: InputRef = useRef(null);
+  const price: InputRef = useRef(null);
+  const country: MutableRefObject<HTMLSelectElement | null> = useRef(null);
+  const isAdult: InputRef = useRef(null);
+  const isPaperVersion: InputRef = useRef(null);
+  const isEbook: InputRef = useRef(null);
+  const deliveryDate: InputRef = useRef(null);
+  const image: InputRef = useRef(null);
+  const invalidInputsRef: MutableRefObject<HTMLFormElement | null> = useRef(null);
 
-    this.author = createRef();
-    this.title = createRef();
-    this.description = createRef();
-    this.price = createRef();
-    this.country = createRef();
-    this.isAdult = createRef();
-    this.isPaperVersion = createRef();
-    this.isEbook = createRef();
-    this.deliveryDate = createRef();
-    this.image = createRef();
-    this.invalidInputsRef = createRef();
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.validate = this.validate.bind(this);
-    this.clearInputs = this.clearInputs.bind(this);
-  }
+  const clearInputs = () => {
+    author.current!.value = "";
+    title.current!.value = "";
+    description.current!.value = "";
+    price.current!.value = "";
+    deliveryDate.current!.value = "";
+    country.current!.value = "default";
+    isAdult.current!.checked = false;
+    isEbook.current!.checked = false;
+    isPaperVersion.current!.checked = true;
+    image.current!.value = "";
+  };
 
-  clearInputs() {
-    this.author.current!.value = "";
-    this.title.current!.value = "";
-    this.description.current!.value = "";
-    this.price.current!.value = "";
-    this.deliveryDate.current!.value = "";
-    this.country.current!.value = "default";
-    this.isAdult.current!.checked = false;
-    this.isEbook.current!.checked = false;
-    this.isPaperVersion.current!.checked = true;
-    this.image.current!.value = "";
-  }
-
-  validate() {
+  const validate = () => {
     const invalidInputIds: string[] = [];
-    const inputRefs = [this.author, this.title, this.deliveryDate];
+    const inputRefs = [author, title, deliveryDate];
 
-    if (!this.image.current?.files || this.image.current?.files.length < 1) {
+    if (!image.current?.files || image.current?.files.length < 1) {
       invalidInputIds.push("file");
     }
 
-    if (!this.country.current?.value || this.country.current?.value === "default") {
+    if (!country.current?.value || country.current?.value === "default") {
       invalidInputIds.push("country");
     }
 
-    if (!this.price.current?.value || Number(this.price.current?.value) <= 0) {
+    if (!price.current?.value || Number(price.current?.value) <= 0) {
       invalidInputIds.push("price");
     }
 
@@ -85,16 +69,16 @@ export default class Form extends Component<FormProps> {
       }
     });
 
-    this.invalidInputsRef.current!.invalidInputIds = [...invalidInputIds];
+    invalidInputsRef.current!.invalidInputIds = [...invalidInputIds];
     return invalidInputIds.length === 0;
-  }
+  };
 
-  handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const isValid = this.validate();
+    const isValid = validate();
 
     if (!isValid) {
-      this.forceUpdate();
+      forceUpdate();
       return;
     }
 
@@ -107,115 +91,103 @@ export default class Form extends Component<FormProps> {
       }
     }
 
-    card.isAdult = this.isAdult.current!.checked;
+    card.isAdult = isAdult.current!.checked;
 
-    card.isPaperVersion = this.isPaperVersion.current!.checked;
+    card.isPaperVersion = isPaperVersion.current!.checked;
 
     card.id = Math.random().toFixed(10);
     card.author = capitalize(card.author as string);
     card.price = Number(card.price);
 
-    this.props.addCard(card as Card);
+    addCard(card as Card);
 
-    this.invalidInputsRef.current!.invalidInputIds = [];
-    this.clearInputs();
-  }
+    invalidInputsRef.current!.invalidInputIds = [];
+    clearInputs();
+  };
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit} ref={this.invalidInputsRef} data-testid="form">
-        <Input
-          id="author"
-          label="author"
-          name="author"
-          ref={this.author}
-          data-testid="author"
-          invalidMsg={this.invalidInputsRef.current?.invalidInputIds.includes("author") ? "Invalid value!" : null}
+  return (
+    <form onSubmit={handleSubmit} ref={invalidInputsRef} data-testid="form">
+      <Input
+        id="author"
+        label="author"
+        name="author"
+        ref={author}
+        data-testid="author"
+        invalidMsg={invalidInputsRef.current?.invalidInputIds.includes("author") ? "Invalid value!" : null}
+      />
+      <Input
+        id="title"
+        label="title"
+        name="title"
+        ref={title}
+        data-testid="title"
+        invalidMsg={invalidInputsRef.current?.invalidInputIds.includes("title") ? "Invalid value!" : null}
+      />
+      <Input id="description" label="description" ref={description} name="description" data-testid="description" />
+      <Input
+        id="price"
+        type="number"
+        name="price"
+        label="price"
+        ref={price}
+        data-testid="price"
+        invalidMsg={invalidInputsRef.current?.invalidInputIds.includes("price") ? "Invalid value!" : null}
+      />
+      <Input
+        id="deliveryDate"
+        type="date"
+        label="Delivery Date"
+        ref={deliveryDate}
+        data-testid="deliveryDate"
+        name="deliveryDate"
+        min={today}
+        invalidMsg={invalidInputsRef.current?.invalidInputIds.includes("deliveryDate") ? "Invalid value!" : null}
+      />
+      <Select
+        options={Object.entries(Countries).map((item) => ({ optionValue: item[0], optionLabel: item[1] }))}
+        label="Country"
+        ref={country}
+        name="country"
+        data-testid="country"
+        invalidMsg={invalidInputsRef.current?.invalidInputIds.includes("country") ? "Invalid value!" : null}
+      />
+      <Input
+        id="file"
+        type="file"
+        label="Book cover"
+        data-testid="imageInput"
+        ref={image}
+        accept="image/*"
+        name="image"
+        invalidMsg={invalidInputsRef.current?.invalidInputIds.includes("file") ? "Invalid value!" : null}
+      />
+      <div className={styles.checkboxWrapper}>
+        <input
+          id="bookTypeChoice1"
+          type="radio"
+          name="bookType"
+          value="paper"
+          data-testid="radio-paper"
+          defaultChecked
+          ref={isPaperVersion}
         />
-        <Input
-          id="title"
-          label="title"
-          name="title"
-          ref={this.title}
-          data-testid="title"
-          invalidMsg={this.invalidInputsRef.current?.invalidInputIds.includes("title") ? "Invalid value!" : null}
+        <label htmlFor="bookTypeChoice1">Paper</label>
+        <input
+          id="bookTypeChoice2"
+          type="radio"
+          name="bookType"
+          value="e-book"
+          data-testid="radio-ebook"
+          ref={isEbook}
         />
-        <Input
-          id="description"
-          label="description"
-          ref={this.description}
-          name="description"
-          data-testid="description"
-        />
-        <Input
-          id="price"
-          type="number"
-          name="price"
-          label="price"
-          ref={this.price}
-          data-testid="price"
-          invalidMsg={this.invalidInputsRef.current?.invalidInputIds.includes("price") ? "Invalid value!" : null}
-        />
-        <Input
-          id="deliveryDate"
-          type="date"
-          label="Delivery Date"
-          ref={this.deliveryDate}
-          data-testid="deliveryDate"
-          name="deliveryDate"
-          min={today}
-          invalidMsg={this.invalidInputsRef.current?.invalidInputIds.includes("deliveryDate") ? "Invalid value!" : null}
-        />
-        <Select
-          options={Object.entries(Countries).map((item) => ({ optionValue: item[0], optionLabel: item[1] }))}
-          label="Country"
-          ref={this.country}
-          name="country"
-          data-testid="country"
-          invalidMsg={this.invalidInputsRef.current?.invalidInputIds.includes("country") ? "Invalid value!" : null}
-        />
-        <Input
-          id="file"
-          type="file"
-          label="Book cover"
-          data-testid="imageInput"
-          ref={this.image}
-          accept="image/*"
-          name="image"
-          invalidMsg={this.invalidInputsRef.current?.invalidInputIds.includes("file") ? "Invalid value!" : null}
-        />
-        <div className={styles.checkboxWrapper}>
-          <input
-            id="bookTypeChoice1"
-            type="radio"
-            name="bookType"
-            value="paper"
-            data-testid="radio-paper"
-            defaultChecked
-            ref={this.isPaperVersion}
-          />
-          <label htmlFor="bookTypeChoice1">Paper</label>
-          <input
-            id="bookTypeChoice2"
-            type="radio"
-            name="bookType"
-            value="e-book"
-            data-testid="radio-ebook"
-            ref={this.isEbook}
-          />
-          <label htmlFor="bookTypeChoice2">E-book</label>
-        </div>
-        <Switcher
-          name="isAdult"
-          labelText="18+"
-          className={styles.mbottom}
-          data-testid="adult-switcher"
-          ref={this.isAdult}
-        />
-        <Button type="submit" className={styles.singleBtn} data-testid="submit">
-          Submit
-        </Button>
-      </form>
-    );
-  }
-}
+        <label htmlFor="bookTypeChoice2">E-book</label>
+      </div>
+      <Switcher name="isAdult" labelText="18+" className={styles.mbottom} data-testid="adult-switcher" ref={isAdult} />
+      <Button type="submit" className={styles.singleBtn} data-testid="submit">
+        Submit
+      </Button>
+    </form>
+  );
+};
+
+export default Form;

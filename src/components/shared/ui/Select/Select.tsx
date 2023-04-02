@@ -1,4 +1,4 @@
-import { forwardRef, SelectHTMLAttributes } from "react";
+import { forwardRef, SelectHTMLAttributes, useMemo } from "react";
 import { capitalize } from "../../lib/capitalize/capitalize";
 
 import styles from "./Select.module.css";
@@ -17,6 +17,15 @@ interface SelectProps<T extends string> extends SelectHTMLAttributes<HTMLSelectE
 
 function Select<T extends string>(props: SelectProps<T>, ref: React.ForwardedRef<HTMLSelectElement>) {
   const { label, name, options, invalidMsg, ...otherProps } = props;
+
+  const optionsList = useMemo(() => {
+    return options.map((opt) => (
+      <option className={styles.option} value={opt.optionValue} key={opt.optionValue} data-testid="select-option">
+        {opt.optionLabel}
+      </option>
+    ));
+  }, [options]);
+
   return (
     <div className={styles.selectWrapper}>
       <label htmlFor={name} className={styles.label}>
@@ -35,15 +44,7 @@ function Select<T extends string>(props: SelectProps<T>, ref: React.ForwardedRef
         <option value="default" disabled>
           Choose an option
         </option>
-        {options.map((option) => (
-          <option
-            key={option.optionValue as string}
-            value={option.optionValue as string | number}
-            data-testid="select-option"
-          >
-            {option.optionLabel as string}
-          </option>
-        ))}
+        {optionsList}
       </select>
     </div>
   );
