@@ -2,16 +2,19 @@ import { forwardRef } from "react";
 import { classNames } from "../../lib/classNames/classNames";
 
 import styles from "./Switcher.module.css";
+import { UseFormRegister } from "react-hook-form/dist/types/form";
+import { FormInputs } from "../../../widgets/Form/Form";
 
 interface SwitcherProps {
   name?: string;
   labelText?: string;
   changeHandler?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   className?: string;
+  register?: UseFormRegister<FormInputs>;
 }
 
 export default forwardRef<HTMLInputElement, SwitcherProps>((props, ref) => {
-  const { name, labelText, className, changeHandler, ...otherProps } = props;
+  const { name, labelText, className, changeHandler, register, ...otherProps } = props;
   return (
     <label htmlFor={name} className={classNames(styles["outer-label"], {}, [className])}>
       <div className={styles["toggle-switch"]}>
@@ -23,6 +26,7 @@ export default forwardRef<HTMLInputElement, SwitcherProps>((props, ref) => {
           ref={ref}
           onChange={changeHandler}
           data-testid="switcher"
+          {...register?.(name as keyof FormInputs)}
           {...otherProps}
         />
         <label className={styles["toggle-switch-label"]} htmlFor={name}>

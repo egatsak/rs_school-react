@@ -2,6 +2,8 @@ import { forwardRef, SelectHTMLAttributes, useMemo } from "react";
 import { capitalize } from "../../lib/capitalize/capitalize";
 
 import styles from "./Select.module.css";
+import { FormInputs } from "../../../widgets/Form/Form";
+import { UseFormRegister } from "react-hook-form/dist/types/form";
 
 interface Option<T extends string> {
   optionLabel: string;
@@ -12,11 +14,12 @@ interface SelectProps<T extends string> extends SelectHTMLAttributes<HTMLSelectE
   options: Option<T>[];
   name: string;
   label?: string;
-  invalidMsg?: string | null;
+  invalidMsg?: string;
+  register?: UseFormRegister<FormInputs>;
 }
 
 function Select<T extends string>(props: SelectProps<T>, ref: React.ForwardedRef<HTMLSelectElement>) {
-  const { label, name, options, invalidMsg, ...otherProps } = props;
+  const { label, name, options, invalidMsg, register, ...otherProps } = props;
 
   const optionsList = useMemo(() => {
     return options.map((opt) => (
@@ -39,6 +42,7 @@ function Select<T extends string>(props: SelectProps<T>, ref: React.ForwardedRef
         className={styles.select}
         defaultValue="default"
         data-testid="select"
+        {...register?.(name as keyof FormInputs)}
         {...otherProps}
       >
         <option value="default" disabled>
