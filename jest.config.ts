@@ -9,4 +9,5 @@ export default {
   },
   setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
   clearMocks: true,
+  globals: { __API__: "" },
 };

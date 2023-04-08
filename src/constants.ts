@@ -1,6 +1,11 @@
 /* eslint-disable max-len */
 export const LOCAL_STORAGE_INPUT_KEY = "input_key";
 
+export const FAKE_IMAGE_URL =
+  "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/71jLBXtWJWL._AC_UF1000,1000_QL80_.jpg";
+
+export const API_URL = "https://the-one-api.dev/v2";
+// token eQT0PS_X0w7MQDiNoPoE
 export enum COUNTRY {
   US = "US",
   BELARUS = "BY",
