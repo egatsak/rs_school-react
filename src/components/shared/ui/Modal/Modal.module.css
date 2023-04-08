@@ -1,0 +1,36 @@
+.modal {
+  position: fixed;
+  z-index: -1;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.4s ease;
+  inset: 0;
+}
+
+.overlay {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0 0 0 / 60%);
+}
+
+.content {
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 60%;
+  background: #bbb;
+  transform: scale(0.5);
+  transition: 0.3s transform;
+}
+
+.opened {
+  z-index: var(--modal-z-index);
+  opacity: 1;
+  visibility: visible;
+}
+
+.opened .content {
+  transform: scale(1);
+}

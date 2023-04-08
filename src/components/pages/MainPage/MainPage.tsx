@@ -1,28 +1,58 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Input from "../../shared/ui/Input/Input";
 import CardList from "../../widgets/CardList/CardList";
+import Button from "../../shared/ui/Button/Button";
+import { PageLoader } from "../../widgets/PageLoader/PageLoader";
+import { $api } from "../../../shared/api/api";
 
+import { MovieApi, MovieMapped } from "../../../shared/types/movies";
 import { FAKE_IMAGE_URL, LOCAL_STORAGE_INPUT_KEY } from "../../../constants";
 
 import styles from "./MainPage.module.css";
-import { $api } from "../../../shared/api/api";
-import Button from "../../shared/ui/Button/Button";
-import { MovieApi, MovieMapped } from "../../../shared/types/movies";
+import { MovieCardModal } from "../../widgets/MovieCardModal/MovieCardModal";
 
 function MainPage() {
   const [inputValue, setInputValue] = useState("");
   const [movies, setMovies] = useState<MovieMapped[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>();
+  const [isMovieModal, setIsMovieModal] = useState(false);
+  const [cardModal, setCardModal] = useState<MovieMapped | null>(null);
 
   const fetchData = useCallback(async (query?: string | RegExp) => {
-    const response = await $api.get<MovieApi>("/movie", { params: query ? { name: query } : null });
-    console.log(response.data);
-    const mappedData: MovieMapped[] = response.data.docs.map((movie) => ({
-      ...movie,
-      id: movie._id,
-      imageLink: FAKE_IMAGE_URL,
-    }));
-    setMovies(mappedData);
+    try {
+      setIsLoading(true);
+      const response = await $api.get<MovieApi>("/movie", { params: query ? { name: query } : null });
+      // console.log(response.data);
+      const mappedData: MovieMapped[] = response.data.docs.map((movie) => ({
+        ...movie,
+        id: movie._id,
+        imageLink: FAKE_IMAGE_URL,
+      }));
+      setMovies(mappedData);
+    } catch (e) {
+      setError(e instanceof Error && e.message ? e.message : "Network error");
+    } finally {
+      setIsLoading(false);
+    }
   }, []);
+
+  const onCloseModal = useCallback(() => {
+    setIsMovieModal(false);
+    setCardModal(null);
+  }, []);
+
+  const onShowModal = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
+      const id = (e.currentTarget as HTMLElement).getAttribute("data-movie-id");
+      const movie = movies.find((mov) => mov.id === id);
+      if (movie) {
+        setCardModal(movie);
+        setIsMovieModal(true);
+      }
+    },
+    [movies]
+  );
 
   useEffect(() => {
     const storageValue = localStorage.getItem(LOCAL_STORAGE_INPUT_KEY);
@@ -46,25 +76,28 @@ function MainPage() {
   const onSubmitHandler = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const query = localStorage.getItem(LOCAL_STORAGE_INPUT_KEY);
-      if (query) {
-        const regex = new RegExp(`^` + query, "i");
-        fetchData(regex);
-      }
+      const query = inputValue;
+      const regex = new RegExp(`^` + query, "i");
+      fetchData(regex);
     },
-    [fetchData]
+    [fetchData, inputValue]
   );
 
   return (
     <div>
-      <h2 className="page-heading">MainPage</h2>
+      <h2 className="page-heading">The Lord of The Rings Movies</h2>
       <form onSubmit={onSubmitHandler}>
-        <Input value={inputValue} onChange={handleChange} className={styles.input} data-testid="input" />
-        <Button type="submit" disabled={inputValue.length === 0}>
+        <Input value={inputValue} onChange={handleChange} data-testid="input" />
+        <Button type="submit" className={styles.btn}>
           Submit
         </Button>
       </form>
-      {movies.length && <CardList data={movies}></CardList>}
+      {isLoading && <PageLoader />}
+      {error && <div style={{ color: "red" }}>{error}</div>}
+      {movies.length ? <CardList data={movies} onShowCard={onShowModal}></CardList> : null}
+      {isMovieModal && (
+        <MovieCardModal isOpen={isMovieModal} onClose={onCloseModal} data={cardModal as MovieMapped}></MovieCardModal>
+      )}
     </div>
   );
 }

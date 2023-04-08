@@ -1,5 +1,5 @@
 import { FC } from "react";
-import Card, { CardProps } from "../Card/Card";
+import Card from "../Card/Card";
 
 import styles from "./CardList.module.css";
 import MovieCard from "../MovieCard/MovieCard";
@@ -14,6 +14,7 @@ type TProps = MovieMapped | Book;
 
 interface CardPropsWithId<T extends WithId> {
   data: T[];
+  onShowCard?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 function isMovie(arg: MovieMapped | Book): arg is MovieMapped {
@@ -24,7 +25,11 @@ const CardList: FC<CardPropsWithId<TProps & WithId>> = (props) => {
   return (
     <ul className={styles.cardlist} data-testid="cardlist-wrapper">
       {props.data.map((item) =>
-        isMovie(item) ? <MovieCard key={item.id} {...item} /> : <Card key={item.id} {...item} />
+        isMovie(item) ? (
+          <MovieCard key={item.id} onClick={props.onShowCard} isConcise={true} {...item} />
+        ) : (
+          <Card key={item.id} {...item} />
+        )
       )}
     </ul>
   );
