@@ -1,7 +1,7 @@
 import { forwardRef, InputHTMLAttributes } from "react";
-import { capitalize } from "../../lib/capitalize/capitalize";
-import { classNames } from "../../lib/classNames/classNames";
+import { classNames } from "../../../../shared/lib/classNames/classNames";
 import styles from "./Input.module.css";
+import { capitalize } from "../../../../shared/lib/capitalize/capitalize";
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   invalidMsg?: string | null;

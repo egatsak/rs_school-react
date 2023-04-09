@@ -31,6 +31,7 @@ const Card: FC<CardProps> = (props) => {
           alt={`Photo-${title}`}
           style={{ width: "300px" }}
           onLoad={() => URL.revokeObjectURL(imageUrl)}
+          data-testid="card-image"
         />
       )}
 

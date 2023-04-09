@@ -1,9 +1,12 @@
 import { screen } from "@testing-library/react";
+import axios from "axios";
 import userEvent from "@testing-library/user-event";
 import { componentRender } from "./test/componentRender";
-
 import { App } from "./App";
 import { LOCAL_STORAGE_INPUT_KEY } from "./constants";
+
+jest.mock("axios");
+const mockedAxios = jest.mocked(axios, { shallow: true });
 
 describe("APP", () => {
   beforeEach(() => {
@@ -12,8 +15,9 @@ describe("APP", () => {
 
   test("renders main page correctly", () => {
     componentRender(<App />, { route: "/" });
-    const mainPageHeader = screen.getByText("MainPage");
-
+    const mainPageHeader = screen.getByText("The Lord of The Rings Movies");
+    const api = mockedAxios;
+    expect(api).not.toHaveBeenCalled();
     expect(mainPageHeader).toBeInTheDocument();
   });
 

@@ -2,7 +2,7 @@ import { FC } from "react";
 
 import styles from "./MovieCard.module.css";
 import { MovieMapped } from "../../../shared/types/movies";
-import { classNames } from "../../shared/lib/classNames/classNames";
+import { classNames } from "../../../shared/lib/classNames/classNames";
 
 export interface MovieCardProps extends MovieMapped {
   imageLink: string;
@@ -28,7 +28,12 @@ const MovieCard: FC<MovieCardProps> = (props) => {
       className={classNames(styles.card, { [styles.clickable]: isConcise })}
       onClick={onClick}
     >
-      <img src={imageLink} alt={`Photo-${id}`} style={{ width: isConcise ? "100px" : "300px" }} />
+      <img
+        src={imageLink}
+        alt={`Photo-${id}`}
+        data-testid="card-image"
+        style={{ maxWidth: isConcise ? "100px" : "300px" }}
+      />
 
       {isConcise ? (
         <div className={styles.container}>
@@ -45,7 +50,7 @@ const MovieCard: FC<MovieCardProps> = (props) => {
             {academyAwardWins} Academy Awards
           </h4>
           <h4>
-            <span data-testid="card-bugdet">Budget: {`${budgetInMillions} mln $`}</span>
+            <span data-testid="card-budget">Budget: {`${budgetInMillions} mln $`}</span>
           </h4>
         </div>
       )}

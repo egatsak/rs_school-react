@@ -1,5 +1,5 @@
 import { forwardRef, SelectHTMLAttributes, useMemo } from "react";
-import { capitalize } from "../../lib/capitalize/capitalize";
+import { capitalize } from "../../../../shared/lib/capitalize/capitalize";
 
 import styles from "./Select.module.css";
 

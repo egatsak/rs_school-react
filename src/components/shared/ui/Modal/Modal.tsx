@@ -1,6 +1,6 @@
 import React, { FC, ReactNode, useCallback, useEffect, useState } from "react";
 import { Portal } from "../Portal/Portal";
-import { Mods, classNames } from "../../lib/classNames/classNames";
+import { Mods, classNames } from "../../../../shared/lib/classNames/classNames";
 
 import styles from "./Modal.module.css";
 

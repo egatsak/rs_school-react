@@ -6,9 +6,9 @@ import Switcher from "../../shared/ui/Switcher/Switcher";
 
 import type { Card } from "../../pages/FormPage/FormPage";
 import { Countries } from "../../../constants";
-import { capitalize } from "../../shared/lib/capitalize/capitalize";
 
 import styles from "./Form.module.css";
+import { capitalize } from "../../../shared/lib/capitalize/capitalize";
 
 type InputRef = MutableRefObject<HTMLInputElement | null>;
 

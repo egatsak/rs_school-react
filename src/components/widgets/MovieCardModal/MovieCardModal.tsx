@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Modal } from "../../shared/ui/Modal/Modal";
 import MovieCard from "../MovieCard/MovieCard";
 import { MovieMapped } from "../../../shared/types/movies";
-import { classNames } from "../../shared/lib/classNames/classNames";
+import { classNames } from "../../../shared/lib/classNames/classNames";
 
 import styles from "./MovieCardModal.module.css";
 import Button from "../../shared/ui/Button/Button";

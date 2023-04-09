@@ -26,5 +26,7 @@ describe("SELECT", () => {
     fireEvent.change(select, { target: { value: "US" } });
 
     expect(renderedOptions[0].selected).toBeTruthy();
+    expect(renderedOptions[1].selected).toBeFalsy();
+    expect(renderedOptions[2].selected).toBeFalsy();
   });
 });
