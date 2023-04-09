@@ -7,5 +7,7 @@ export default defineConfig({
   plugins: [react()],
   define: {
     __API__: JSON.stringify("https://the-one-api.dev/v2"),
+    __API_KEY__: JSON.stringify("eQT0PS_X0w7MQDiNoPoE"),
+    __PROJECT__: JSON.stringify("frontend"),
   },
 });

@@ -6,3 +6,5 @@ declare module "*.module.css" {
 }
 
 declare const __API__: string;
+declare const __API_KEY__: string;
+declare const __PROJECT__: "jest" | "frontend";

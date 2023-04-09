@@ -62,7 +62,9 @@ function MainPage() {
   }, []);
 
   useEffect(() => {
-    fetchData();
+    if (__PROJECT__ !== "jest") {
+      fetchData();
+    }
   }, [fetchData]);
 
   const handleChange = useCallback(

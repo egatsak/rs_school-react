@@ -65,5 +65,7 @@ module.exports = {
   ],
   globals: {
     __API__: true,
+    __API_KEY__: true,
+    __PROJECT__: true,
   },
 };
