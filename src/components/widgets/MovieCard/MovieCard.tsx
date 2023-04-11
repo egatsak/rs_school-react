@@ -24,6 +24,7 @@ const MovieCard: FC<MovieCardProps> = (props) => {
   } = props;
   return (
     <article
+      data-testid="card-card"
       data-movie-id={id}
       className={classNames(styles.card, { [styles.clickable]: isConcise })}
       onClick={onClick}

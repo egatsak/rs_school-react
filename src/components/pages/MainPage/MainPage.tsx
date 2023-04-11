@@ -15,7 +15,7 @@ function MainPage() {
   const [inputValue, setInputValue] = useState("");
   const [movies, setMovies] = useState<MovieMapped[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>();
+  const [error, setError] = useState<string | null>(null);
   const [isMovieModal, setIsMovieModal] = useState(false);
   const [cardModal, setCardModal] = useState<MovieMapped | null>(null);
 
@@ -23,7 +23,6 @@ function MainPage() {
     try {
       setIsLoading(true);
       const response = await $api.get<MovieApi>("/movie", { params: query ? { name: query } : null });
-      // console.log(response.data);
       const mappedData: MovieMapped[] = response.data.docs.map((movie) => ({
         ...movie,
         id: movie._id,
@@ -63,7 +62,8 @@ function MainPage() {
 
   useEffect(() => {
     if (__PROJECT__ !== "jest") {
-      fetchData();
+      const storageValue = localStorage.getItem(LOCAL_STORAGE_INPUT_KEY);
+      storageValue ? fetchData(new RegExp(`^` + storageValue, "i")) : fetchData();
     }
   }, [fetchData]);
 
@@ -78,18 +78,17 @@ function MainPage() {
   const onSubmitHandler = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const query = inputValue;
-      const regex = new RegExp(`^` + query, "i");
+      const regex = new RegExp(`^` + inputValue, "i");
       fetchData(regex);
     },
     [fetchData, inputValue]
   );
 
   return (
-    <div>
+    <div data-testid="testtesttest">
       <h2 className="page-heading">The Lord of The Rings Movies</h2>
       <form onSubmit={onSubmitHandler}>
-        <Input value={inputValue} onChange={handleChange} data-testid="input" />
+        <Input value={inputValue} onChange={handleChange} />
         <Button type="submit" className={styles.btn}>
           Submit
         </Button>
@@ -97,9 +96,7 @@ function MainPage() {
       {isLoading && <PageLoader />}
       {error && <div style={{ color: "red" }}>{error}</div>}
       {movies.length ? <CardList data={movies} onShowCard={onShowModal}></CardList> : null}
-      {isMovieModal && (
-        <MovieCardModal isOpen={isMovieModal} onClose={onCloseModal} data={cardModal as MovieMapped}></MovieCardModal>
-      )}
+      {isMovieModal && <MovieCardModal isOpen={isMovieModal} onClose={onCloseModal} data={cardModal as MovieMapped} />}
     </div>
   );
 }
