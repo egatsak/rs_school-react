@@ -1,21 +1,25 @@
 import { useCallback, useState } from "react";
-import { Book } from "../../../constants";
+import { useAppDispatch } from "../../store/store";
+import { BookCard } from "../../store/slices/bookSlice/types";
 import CardList from "../../widgets/CardList/CardList";
 import Form from "../../widgets/Form/Form";
+import { bookActions } from "../../store/slices/bookSlice/bookSlice";
+import { useSelector } from "react-redux";
+import { StateSchema } from "../../store/StateSchema";
 
-export interface Card extends Book {
-  deliveryDate: string;
-  image: File;
-}
-
-export type CardKey = keyof Card;
+export type CardKey = keyof BookCard;
 
 function FormPage() {
-  const [cards, setCards] = useState([] as Card[]);
+  const dispatch = useAppDispatch();
 
-  const addCard = useCallback((card: Card) => {
-    setCards((prev) => [...prev, card]);
-  }, []);
+  const addCard = useCallback(
+    (card: BookCard) => {
+      dispatch(bookActions.addBook(card));
+    },
+    [dispatch]
+  );
+
+  const cards = useSelector((state: StateSchema) => state.book.data);
 
   return (
     <div>

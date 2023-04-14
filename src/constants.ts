@@ -18,19 +18,6 @@ export const Countries = {
   [COUNTRY.GEORGIA]: "Georgia",
 };
 
-export interface Book {
-  id: string;
-  author: string;
-  title: string;
-  price: number;
-  description: string;
-  isAdult: boolean;
-  isPaperVersion: boolean;
-  country: COUNTRY;
-  imageLink?: string;
-  quantityInStock?: number;
-}
-
 export const BOOKS = [
   {
     id: "1",

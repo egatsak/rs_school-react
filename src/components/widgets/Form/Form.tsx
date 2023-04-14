@@ -4,16 +4,16 @@ import Input from "../../shared/ui/Input/Input";
 import Select from "../../shared/ui/Select/Select";
 import Switcher from "../../shared/ui/Switcher/Switcher";
 
-import type { Card } from "../../pages/FormPage/FormPage";
 import { Countries } from "../../../constants";
 
 import styles from "./Form.module.css";
 import { capitalize } from "../../../shared/lib/capitalize/capitalize";
+import { BookCard } from "../../store/slices/bookSlice/types";
 
 type InputRef = MutableRefObject<HTMLInputElement | null>;
 
 interface FormProps {
-  addCard: (card: Card) => void;
+  addCard: (card: BookCard) => void;
 }
 
 const today = new Date().toISOString().split("T")[0];
@@ -83,11 +83,11 @@ const Form: FC<FormProps> = (props) => {
     }
 
     const formData = new FormData(e.currentTarget);
-    const card = {} as Record<keyof Card, File | string | number | boolean>;
+    const card = {} as Record<keyof BookCard, File | string | number | boolean>;
 
     for (const [key, value] of formData.entries()) {
       if (value !== undefined && key !== "bookType") {
-        card[key as keyof Card] = value;
+        card[key as keyof BookCard] = value;
       }
     }
 
@@ -99,7 +99,7 @@ const Form: FC<FormProps> = (props) => {
     card.author = capitalize(card.author as string);
     card.price = Number(card.price);
 
-    addCard(card as Card);
+    addCard(card as BookCard);
 
     invalidInputsRef.current!.invalidInputIds = [];
     clearInputs();
