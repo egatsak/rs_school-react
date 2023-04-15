@@ -3,7 +3,6 @@ import axios from "axios";
 import userEvent from "@testing-library/user-event";
 import { componentRender } from "./test/componentRender";
 import { App } from "./App";
-import { LOCAL_STORAGE_INPUT_KEY } from "./constants";
 
 jest.mock("axios");
 const mockedAxios = jest.mocked(axios, { shallow: true });
@@ -58,13 +57,10 @@ describe("APP", () => {
     const userInput = "12345";
     await userEvent.type(input, userInput);
 
-    expect(localStorage.getItem(LOCAL_STORAGE_INPUT_KEY)).toEqual("12345");
-
     await userEvent.click(aboutLink);
     const aboutPageHeader = screen.getByText("AboutPage");
 
     expect(aboutPageHeader).toBeInTheDocument();
-    expect(localStorage.getItem(LOCAL_STORAGE_INPUT_KEY)).toEqual(userInput);
 
     await userEvent.click(mainLink);
 

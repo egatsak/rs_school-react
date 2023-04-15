@@ -4,7 +4,7 @@ import Card from "../Card/Card";
 import styles from "./CardList.module.css";
 import MovieCard from "../MovieCard/MovieCard";
 import { MovieMapped } from "../../../shared/types/movies";
-import { Book } from "../../../constants";
+import { Book } from "../../store/slices/bookSlice/types";
 
 interface WithId {
   id: string;

@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback } from "react";
 import { useAppDispatch } from "../../store/store";
 import { BookCard } from "../../store/slices/bookSlice/types";
 import CardList from "../../widgets/CardList/CardList";

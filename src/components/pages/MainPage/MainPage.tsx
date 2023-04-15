@@ -1,40 +1,32 @@
 import React, { useCallback, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../store/store";
 import Input from "../../shared/ui/Input/Input";
 import CardList from "../../widgets/CardList/CardList";
 import Button from "../../shared/ui/Button/Button";
 import { PageLoader } from "../../widgets/PageLoader/PageLoader";
-import { $api } from "../../../shared/api/api";
-
-import { MovieApi, MovieMapped } from "../../../shared/types/movies";
-import { FAKE_IMAGE_URL, LOCAL_STORAGE_INPUT_KEY } from "../../../constants";
+import { MovieCardModal } from "../../widgets/MovieCardModal/MovieCardModal";
+import { fetchMovies } from "../../store/slices/movieSlice/services/fetchMovies";
+import { StateSchema } from "../../store/StateSchema";
+import { DynamicModuleLoader, ReducersList } from "../../shared/lib/DynamicModuleLoader/DynamicModuleLoader";
+import { MovieMapped } from "../../../shared/types/movies";
+import { moviesActions, moviesReducer } from "../../store/slices/movieSlice/moviesSlice";
 
 import styles from "./MainPage.module.css";
-import { MovieCardModal } from "../../widgets/MovieCardModal/MovieCardModal";
+
+const reducers: ReducersList = {
+  movies: moviesReducer,
+};
 
 function MainPage() {
-  const [inputValue, setInputValue] = useState("");
-  const [movies, setMovies] = useState<MovieMapped[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [isMovieModal, setIsMovieModal] = useState(false);
   const [cardModal, setCardModal] = useState<MovieMapped | null>(null);
 
-  const fetchData = useCallback(async (query?: string | RegExp) => {
-    try {
-      setIsLoading(true);
-      const response = await $api.get<MovieApi>("/movie", { params: query ? { name: query } : null });
-      const mappedData: MovieMapped[] = response.data.docs.map((movie) => ({
-        ...movie,
-        id: movie._id,
-        imageLink: FAKE_IMAGE_URL,
-      }));
-      setMovies(mappedData);
-    } catch (e) {
-      setError(e instanceof Error && e.message ? e.message : "Network error");
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+  const dispatch = useAppDispatch();
+  const movies = useSelector((state: StateSchema) => state.movies?.mappedMovies);
+  const error = useSelector((state: StateSchema) => state.movies?.error);
+  const isLoading = useSelector((state: StateSchema) => state.movies?.isLoading);
+  const search = useSelector((state: StateSchema) => state.movies?.search);
 
   const onCloseModal = useCallback(() => {
     setIsMovieModal(false);
@@ -44,7 +36,7 @@ function MainPage() {
   const onShowModal = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
       const id = (e.currentTarget as HTMLElement).getAttribute("data-movie-id");
-      const movie = movies.find((mov) => mov.id === id);
+      const movie = movies?.find((mov) => mov.id === id);
       if (movie) {
         setCardModal(movie);
         setIsMovieModal(true);
@@ -54,50 +46,50 @@ function MainPage() {
   );
 
   useEffect(() => {
-    const storageValue = localStorage.getItem(LOCAL_STORAGE_INPUT_KEY);
-    if (storageValue !== null) {
-      setInputValue(storageValue);
+    if (search?.length) {
+      const regex = new RegExp(`^` + search, "i");
+      dispatch(fetchMovies(regex));
+    } else {
+      dispatch(fetchMovies());
     }
+    // We deliberately leave deps array empty as we want the effect to be called only once
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  useEffect(() => {
-    if (__PROJECT__ !== "jest") {
-      const storageValue = localStorage.getItem(LOCAL_STORAGE_INPUT_KEY);
-      storageValue ? fetchData(new RegExp(`^` + storageValue, "i")) : fetchData();
-    }
-  }, [fetchData]);
 
   const handleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setInputValue(e.target.value);
-      localStorage.setItem(LOCAL_STORAGE_INPUT_KEY, e.target.value);
+      dispatch(moviesActions.setSearch(e.target.value));
     },
-    [setInputValue]
+    [dispatch]
   );
 
   const onSubmitHandler = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       e.preventDefault();
-      const regex = new RegExp(`^` + inputValue, "i");
-      fetchData(regex);
+      const regex = new RegExp(`^` + search, "i");
+      dispatch(fetchMovies(regex));
     },
-    [fetchData, inputValue]
+    [dispatch, search]
   );
 
   return (
-    <div data-testid="testtesttest">
-      <h2 className="page-heading">The Lord of The Rings Movies</h2>
-      <form onSubmit={onSubmitHandler}>
-        <Input value={inputValue} onChange={handleChange} />
-        <Button type="submit" className={styles.btn}>
-          Submit
-        </Button>
-      </form>
-      {isLoading && <PageLoader />}
-      {error && <div style={{ color: "red" }}>{error}</div>}
-      {movies.length ? <CardList data={movies} onShowCard={onShowModal}></CardList> : null}
-      {isMovieModal && <MovieCardModal isOpen={isMovieModal} onClose={onCloseModal} data={cardModal as MovieMapped} />}
-    </div>
+    <DynamicModuleLoader reducers={reducers} removeAfterUnmount={false}>
+      <div data-testid="testtesttest">
+        <h2 className="page-heading">The Lord of The Rings Movies</h2>
+        <form onSubmit={onSubmitHandler}>
+          <Input value={search || ""} onChange={handleChange} />
+          <Button type="submit" className={styles.btn}>
+            Submit
+          </Button>
+        </form>
+        {isLoading && <PageLoader />}
+        {error && <div style={{ color: "red" }}>{error}</div>}
+        {movies && movies.length ? <CardList data={movies} onShowCard={onShowModal}></CardList> : null}
+        {isMovieModal && (
+          <MovieCardModal isOpen={isMovieModal} onClose={onCloseModal} data={cardModal as MovieMapped} />
+        )}
+      </div>
+    </DynamicModuleLoader>
   );
 }
 

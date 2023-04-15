@@ -1,4 +1,5 @@
-interface MovieCommon {
+export interface Movie {
+  _id: string;
   name: string;
   academyAwardNominations: number;
   academyAwardWins: number;
@@ -8,11 +9,7 @@ interface MovieCommon {
   runtimeInMinutes: number;
 }
 
-export interface Movie extends MovieCommon {
-  _id: string;
-}
-
-export interface MovieMapped extends MovieCommon {
+export interface MovieMapped extends Movie {
   id: string;
   imageLink: string;
 }

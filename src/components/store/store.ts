@@ -29,6 +29,8 @@ export function createReduxStore(initialState?: StateSchema, asyncReducers?: Red
       }),
   });
 
+  // As we connect reducerManager for async reducers, we have to ignore the type error (based on the tutorial by Ulbi TV)
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   store.reducerManager = reducerManager;
 

@@ -1,10 +1,12 @@
 import { AnyAction, CombinedState, EnhancedStore, Reducer, ReducersMapObject } from "@reduxjs/toolkit";
 import { AxiosInstance } from "axios";
 import { BookSchema } from "./slices/bookSlice/types";
+import { MoviesSchema } from "./slices/movieSlice/types";
 
 export interface StateSchema {
   book: BookSchema;
-  /*   counter: CounterSchema; */
+  // async
+  movies?: MoviesSchema;
 }
 
 export type StateSchemaKey = keyof StateSchema;

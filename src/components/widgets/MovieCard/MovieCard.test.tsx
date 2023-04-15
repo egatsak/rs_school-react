@@ -10,6 +10,7 @@ const mockMovie = {
   rottenTomatoesScore: 94,
   runtimeInMinutes: 558,
   id: "5cd95395de30eff6ebccde56",
+  _id: "5cd95395de30eff6ebccde56",
   imageLink:
     "https://m.media-amazon.com/images/W/IMAGERENDERING_521856-T1/images/I/71jLBXtWJWL._AC_UF1000,1000_QL80_.jpg",
 };
