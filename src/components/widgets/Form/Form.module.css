@@ -1,0 +1,17 @@
+.singleBtn {
+  display: block;
+  margin: 0 auto;
+}
+
+.mbottom {
+  margin-bottom: 20px;
+}
+
+.checkboxWrapper {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.checkboxWrapper :not(:first-child) {
+  margin-left: 10px;
+}
