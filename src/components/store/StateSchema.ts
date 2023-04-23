@@ -5,6 +5,7 @@ import { MoviesSchema } from "./slices/movieSlice/types";
 
 export interface StateSchema {
   book: BookSchema;
+
   // async
   movies?: MoviesSchema;
 }
